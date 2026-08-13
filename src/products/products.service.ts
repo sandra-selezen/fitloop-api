@@ -23,12 +23,12 @@ export class ProductsService {
     return product;
   }
 
-  findAll() {
-    return `This action returns all products`;
+  findAll(): Promise<Product[] | null> {
+    return this.productModel.find({});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  findOne(id: string) {
+    return this.productModel.findById(id);
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {
@@ -36,7 +36,7 @@ export class ProductsService {
     return `This action updates a #${id} product`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} product`;
+  remove(id: string) {
+    return this.productModel.findByIdAndDelete(id);
   }
 }
