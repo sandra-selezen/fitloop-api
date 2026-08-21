@@ -88,7 +88,7 @@ export class Product {
     ref: User.name,
     required: true,
   })
-  seller!: Types.ObjectId;
+  seller_id!: Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

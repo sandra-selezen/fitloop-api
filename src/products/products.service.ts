@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { Product } from 'src/schemas/product.schema';
-import { Model } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -17,7 +18,7 @@ export class ProductsService {
   ): Promise<Product> {
     const product = await this.productModel.create({
       ...createProductDto,
-      seller: sellerId,
+      seller_id: sellerId,
     });
 
     return product;
