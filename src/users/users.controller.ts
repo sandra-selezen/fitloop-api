@@ -2,6 +2,7 @@ import { Body, Controller, Patch, Request, UseGuards } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import type { AuthenticatedRequest } from 'src/types/authenticated-request';
 
 @Controller('users')
 export class UsersController {
@@ -9,8 +10,10 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Patch('update')
-  updateProfile(@Request() req, @Body() dto: UpdateUserDto) {
-    console.log('USER FROM JWT:', req.user);
+  updateProfile(
+    @Request() req: AuthenticatedRequest,
+    @Body() dto: UpdateUserDto,
+  ) {
     return this.usersService.update(req.user.sub, dto);
   }
 }
