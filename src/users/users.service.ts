@@ -2,15 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from 'src/schemas/user.schema';
-import { Product, ProductDocument } from 'src/schemas/product.schema';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    @InjectModel(Product.name)
-    private readonly productModel: Model<ProductDocument>,
   ) {}
 
   async create(email: string, password: string): Promise<UserDocument> {
@@ -19,7 +16,7 @@ export class UsersService {
   }
 
   async findByEmail(email: string): Promise<UserDocument | null> {
-    return this.userModel.findOne({ email }).exec();
+    return this.userModel.findOne({ email }).select('+password').exec();
   }
 
   async findById(id: string): Promise<UserDocument | null> {
@@ -42,9 +39,5 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException('User not found');
     }
-  }
-
-  async findProducts(id: string): Promise<Product[] | null> {
-    return this.productModel.find({ seller_id: id });
   }
 }

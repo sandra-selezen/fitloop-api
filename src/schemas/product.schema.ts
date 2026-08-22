@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
 import * as mongoose from 'mongoose';
 import { User } from './user.schema';
+import { ProductStatus } from 'src/products/types/product-status';
 
 export type ProductDocument = HydratedDocument<Product>;
 
@@ -82,6 +83,13 @@ export class Product {
     default: '',
   })
   slug!: string;
+
+  @Prop({
+    type: String,
+    enum: ProductStatus,
+    default: ProductStatus.DRAFT,
+  })
+  status!: ProductStatus;
 
   @Prop({
     type: mongoose.Schema.Types.ObjectId,

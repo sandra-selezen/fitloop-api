@@ -29,6 +29,7 @@ export class User {
     type: String,
     required: true,
     min: 8,
+    select: false,
   })
   password!: string;
 }

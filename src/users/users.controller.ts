@@ -9,7 +9,7 @@ import {
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import type { AuthenticatedRequest } from 'src/types/authenticated-request';
+import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request';
 
 @Controller('users')
 export class UsersController {
@@ -29,14 +29,4 @@ export class UsersController {
   ) {
     return this.usersService.update(req.user.sub, dto);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me/products')
-  getProducts(@Request() req: AuthenticatedRequest) {
-    return this.usersService.findProducts(req.user.sub);
-  }
-
-  // TODO
-  // GET /users/me/sales
-  // GET /users/me/orders
 }

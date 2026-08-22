@@ -6,6 +6,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { FavoritesController } from './favorites/favorites.controller';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -16,8 +18,9 @@ import { UsersModule } from './users/users.module';
     ProductsModule,
     AuthModule,
     UsersModule,
+    FavoritesModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, FavoritesController],
   providers: [AppService],
 })
 export class AppModule {}
