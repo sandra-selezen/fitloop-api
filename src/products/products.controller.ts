@@ -17,10 +17,14 @@ import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request'
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProductStatus } from './types/product-status';
 import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(
+    private readonly productsService: ProductsService,
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   @Get()
   findAll() {
@@ -66,8 +70,7 @@ export class ProductsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Request() req: AuthenticatedRequest,
   ) {
-    // return this.favoritesService.add(req.user.sub, id);
-    return `this ${id} and ${req.user.sub}`;
+    return this.favoritesService.add(req.user.sub, id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -76,8 +79,7 @@ export class ProductsController {
     @Param('id', ParseObjectIdPipe) id: string,
     @Request() req: AuthenticatedRequest,
   ) {
-    // return this.favoritesService.remove(req.user.sub, id);
-    return `this ${id} and ${req.user.sub}`;
+    return this.favoritesService.remove(req.user.sub, id);
   }
 
   @Delete(':id')

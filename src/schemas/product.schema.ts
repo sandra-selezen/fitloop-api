@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, Types } from 'mongoose';
-import * as mongoose from 'mongoose';
 import { User } from './user.schema';
 import { ProductStatus } from 'src/products/types/product-status';
 
@@ -92,7 +91,7 @@ export class Product {
   status!: ProductStatus;
 
   @Prop({
-    type: mongoose.Schema.Types.ObjectId,
+    type: Types.ObjectId,
     ref: User.name,
     required: true,
   })

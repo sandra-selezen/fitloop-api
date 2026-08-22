@@ -4,13 +4,14 @@ import { InjectModel } from '@nestjs/mongoose';
 
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from 'src/schemas/product.schema';
+import { Product, ProductDocument } from 'src/schemas/product.schema';
 import { ProductStatus } from './types/product-status';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectModel(Product.name) private readonly productModel: Model<Product>,
+    @InjectModel(Product.name)
+    private readonly productModel: Model<ProductDocument>,
   ) {}
 
   findAllActiveProducts(): Promise<Product[] | null> {
