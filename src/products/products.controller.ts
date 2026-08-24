@@ -9,6 +9,8 @@ import {
   Request,
   UseGuards,
   Query,
+  UseInterceptors,
+  UploadedFiles,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -18,12 +20,15 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProductStatus } from './types/product-status';
 import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
 import { FavoritesService } from 'src/favorites/favorites.service';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('products')
 export class ProductsController {
   constructor(
     private readonly productsService: ProductsService,
     private readonly favoritesService: FavoritesService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   @Get()
@@ -47,6 +52,20 @@ export class ProductsController {
     @Query('status') status?: ProductStatus,
   ) {
     return this.productsService.findAllMyProducts(req.user.sub, status);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('images')
+  @UseInterceptors(FilesInterceptor('images', 5))
+  async uploadImages(@UploadedFiles() files: Express.Multer.File[]) {
+    const uploadedImages = await Promise.all(
+      files.map((file) => this.cloudinaryService.uploadImage(file)),
+    );
+
+    return uploadedImages.map((image) => ({
+      url: image.secure_url,
+      publicId: image.public_id,
+    }));
   }
 
   @Get(':id')

@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { FavoritesController } from './favorites/favorites.controller';
 import { FavoritesModule } from './favorites/favorites.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { FavoritesModule } from './favorites/favorites.module';
     AuthModule,
     UsersModule,
     FavoritesModule,
+    CloudinaryModule,
   ],
   controllers: [AppController, FavoritesController],
   providers: [AppService],

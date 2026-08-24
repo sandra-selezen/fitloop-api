@@ -5,6 +5,19 @@ import { ProductStatus } from 'src/products/types/product-status';
 
 export type ProductDocument = HydratedDocument<Product>;
 
+@Schema({ _id: false })
+export class ProductImage {
+  @Prop({
+    required: true,
+  })
+  url!: string;
+
+  @Prop({
+    required: true,
+  })
+  publicId!: string;
+}
+
 @Schema({ timestamps: true, versionKey: false })
 export class Product {
   @Prop({
@@ -89,6 +102,12 @@ export class Product {
     default: ProductStatus.DRAFT,
   })
   status!: ProductStatus;
+
+  @Prop({
+    type: [ProductImage],
+    default: [],
+  })
+  images!: ProductImage[];
 
   @Prop({
     type: Types.ObjectId,
