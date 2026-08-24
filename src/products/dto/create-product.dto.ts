@@ -1,4 +1,4 @@
-import { IsEnum, IsInt, IsPositive, IsString } from 'class-validator';
+import { IsArray, IsEnum, IsInt, IsPositive, IsString } from 'class-validator';
 import { ProductStatus } from '../types/product-status';
 
 export class CreateProductDto {
@@ -38,6 +38,12 @@ export class CreateProductDto {
 
   @IsString()
   slug!: string;
+
+  @IsArray()
+  images!: {
+    url: string;
+    publicId: string;
+  }[];
 
   @IsEnum(ProductStatus)
   status!: ProductStatus;

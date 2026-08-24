@@ -12,6 +12,7 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
+import { FilesInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -21,7 +22,6 @@ import { ProductStatus } from './types/product-status';
 import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('products')
 export class ProductsController {
@@ -101,8 +101,12 @@ export class ProductsController {
     return this.favoritesService.remove(req.user.sub, id);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  remove(@Param('id', ParseObjectIdPipe) id: string) {
-    return this.productsService.remove(id);
+  remove(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.productsService.remove(id, req.user.sub);
   }
 }

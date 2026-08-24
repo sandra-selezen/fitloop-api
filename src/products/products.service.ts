@@ -6,12 +6,14 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { Product, ProductDocument } from 'src/schemas/product.schema';
 import { ProductStatus } from './types/product-status';
+import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel(Product.name)
     private readonly productModel: Model<ProductDocument>,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   findAllActiveProducts(): Promise<Product[] | null> {
@@ -63,13 +65,45 @@ export class ProductsService {
       throw new NotFoundException('Product not found');
     }
 
+    if (updateProductDto.images) {
+      const oldImages = product.images ?? [];
+      const newImages = updateProductDto.images;
+
+      const newPublicIds = new Set(newImages.map((image) => image.publicId));
+
+      const removedImages = oldImages.filter(
+        (image) => !newPublicIds.has(image.publicId),
+      );
+
+      for (const image of removedImages) {
+        await this.cloudinaryService.deleteImage(image.publicId);
+      }
+    }
+
     return this.productModel.findByIdAndUpdate(id, updateProductDto, {
       returnDocument: 'after',
       runValidators: true,
     });
   }
 
-  remove(id: string) {
-    return this.productModel.findByIdAndDelete(id);
+  async remove(id: string, sellerId: string) {
+    const product = await this.productModel.findOne({
+      _id: id,
+      seller_id: sellerId,
+    });
+
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+
+    for (const image of product.images ?? []) {
+      await this.cloudinaryService.deleteImage(image.publicId);
+    }
+
+    await this.productModel.findByIdAndDelete(id);
+
+    return {
+      message: 'Product deleted successfully',
+    };
   }
 }
