@@ -22,6 +22,7 @@ import { ProductStatus } from './types/product-status';
 import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
+import { GetProductsDto } from './dto/get-product.dto';
 
 @Controller('products')
 export class ProductsController {
@@ -32,8 +33,8 @@ export class ProductsController {
   ) {}
 
   @Get()
-  findAll() {
-    return this.productsService.findAllActiveProducts();
+  findAll(@Query() query: GetProductsDto) {
+    return this.productsService.findAll(query);
   }
 
   @UseGuards(JwtAuthGuard)
