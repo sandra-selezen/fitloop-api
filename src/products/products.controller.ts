@@ -15,6 +15,7 @@ import {
 import {
   ApiBearerAuth,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -61,6 +62,7 @@ export class ProductsController {
   @ApiBearerAuth()
   @ApiOperation({ summary: 'Get my products by status' })
   @ApiResponse({ status: 200, type: CreateProductDto, isArray: true })
+  @ApiQuery({ name: 'status', enum: ProductStatus })
   @UseGuards(JwtAuthGuard)
   @Get('my')
   getProducts(
