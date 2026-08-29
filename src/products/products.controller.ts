@@ -12,6 +12,12 @@ import {
   UseInterceptors,
   UploadedFiles,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -24,6 +30,7 @@ import { FavoritesService } from 'src/favorites/favorites.service';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { GetProductsDto } from './dto/get-product.dto';
 
+@ApiTags('products')
 @Controller('products')
 export class ProductsController {
   constructor(
@@ -32,11 +39,16 @@ export class ProductsController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  @ApiOperation({ summary: 'Get products' })
+  @ApiResponse({ status: 200, type: CreateProductDto, isArray: true })
   @Get()
   findAll(@Query() query: GetProductsDto) {
     return this.productsService.findAll(query);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create a new product' })
+  @ApiResponse({ status: 201, type: CreateProductDto })
   @UseGuards(JwtAuthGuard)
   @Post()
   create(
@@ -46,6 +58,9 @@ export class ProductsController {
     return this.productsService.create(createProductDto, req.user.sub);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get my products by status' })
+  @ApiResponse({ status: 200, type: CreateProductDto, isArray: true })
   @UseGuards(JwtAuthGuard)
   @Get('my')
   getProducts(
@@ -69,11 +84,16 @@ export class ProductsController {
     }));
   }
 
+  @ApiOperation({ summary: 'Get product by id' })
+  @ApiResponse({ status: 200, type: CreateProductDto })
   @Get(':id')
   findOne(@Param('id', ParseObjectIdPipe) id: string) {
     return this.productsService.findOne(id);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update a product' })
+  @ApiResponse({ status: 200, description: 'Product updated' })
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   update(
@@ -84,6 +104,9 @@ export class ProductsController {
     return this.productsService.update(id, req.user.sub, updateProductDto);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Add product to favorite' })
+  @ApiResponse({ status: 200, description: 'Product added to favorite' })
   @UseGuards(JwtAuthGuard)
   @Post(':id/favorite')
   addToFavorites(
@@ -93,6 +116,9 @@ export class ProductsController {
     return this.favoritesService.add(req.user.sub, id);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Remove product from favorite' })
+  @ApiResponse({ status: 200, description: 'Product removed from favorite' })
   @UseGuards(JwtAuthGuard)
   @Delete(':id/favorite')
   removeFromFavorites(
@@ -102,6 +128,9 @@ export class ProductsController {
     return this.favoritesService.remove(req.user.sub, id);
   }
 
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Delete a product' })
+  @ApiResponse({ status: 200, description: 'Product deleted' })
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   remove(

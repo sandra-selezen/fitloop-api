@@ -6,12 +6,21 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import type { AuthenticatedRequest } from 'src/auth/types/authenticated-request';
 import { FavoritesService } from 'src/favorites/favorites.service';
+import { CreateProductDto } from 'src/products/dto/create-product.dto';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 export class UsersController {
   constructor(
@@ -34,6 +43,8 @@ export class UsersController {
     return this.usersService.update(req.user.sub, dto);
   }
 
+  @ApiOperation({ summary: 'Get favorite products' })
+  @ApiResponse({ status: 200, type: CreateProductDto, isArray: true })
   @UseGuards(JwtAuthGuard)
   @Get('me/favorites')
   getFavorites(@Request() req: AuthenticatedRequest) {
