@@ -12,7 +12,7 @@ export class GetProductsDto {
 
   @IsOptional()
   @IsString()
-  productType?: string;
+  product_type?: string;
 
   @IsOptional()
   @IsString()

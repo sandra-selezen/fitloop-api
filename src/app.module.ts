@@ -9,6 +9,8 @@ import { UsersModule } from './users/users.module';
 import { FavoritesController } from './favorites/favorites.controller';
 import { FavoritesModule } from './favorites/favorites.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { SalesModule } from './sales/sales.module';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -21,6 +23,8 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     UsersModule,
     FavoritesModule,
     CloudinaryModule,
+    SalesModule,
+    OrdersModule,
   ],
   controllers: [AppController, FavoritesController],
   providers: [AppService],

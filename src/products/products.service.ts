@@ -21,7 +21,7 @@ export class ProductsService {
     const {
       search,
       category,
-      productType,
+      product_type,
       size,
       sort = 'newest',
       page = 1,
@@ -53,8 +53,8 @@ export class ProductsService {
       filter.category = category;
     }
 
-    if (productType) {
-      filter.productType = productType;
+    if (product_type) {
+      filter.product_type = product_type;
     }
 
     if (size) {

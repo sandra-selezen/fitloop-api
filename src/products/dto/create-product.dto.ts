@@ -29,7 +29,7 @@ export class CreateProductDto {
     example: 'new',
   })
   @IsString()
-  productType!: string;
+  product_type!: string;
 
   @ApiProperty({
     example: 'new_with_tags',

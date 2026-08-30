@@ -50,7 +50,7 @@ export class Product {
     type: String,
     default: '',
   })
-  productType!: string;
+  product_type!: string;
 
   @Prop({
     type: String,
